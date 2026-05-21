@@ -8,6 +8,14 @@ import { AuditResult } from "@/types/audit";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+
+import {
+  TrendingDown,
+  DollarSign,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
 
 const toolOptions = [
   "ChatGPT",
@@ -210,40 +218,66 @@ export default function AuditForm() {
       </h3>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-zinc-800 bg-black p-4">
-          <p className="text-sm text-zinc-400">
-            Monthly Spend
-          </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-950 to-zinc-900 p-5"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-zinc-400">
+              Monthly Spend
+            </p>
 
-          <p className="mt-2 text-3xl font-bold text-white">
+            <DollarSign className="h-5 w-5 text-zinc-500" />
+          </div>
+
+          <p className="mt-4 text-4xl font-bold text-white">
             ${results.totalMonthlySpend}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-zinc-800 bg-black p-4">
-          <p className="text-sm text-zinc-400">
-            Annual Spend
-          </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-950 to-zinc-900 p-5"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-zinc-400">
+              Annual Spend
+            </p>
 
-          <p className="mt-2 text-3xl font-bold text-white">
+            <TrendingDown className="h-5 w-5 text-red-400" />
+          </div>
+
+          <p className="mt-4 text-4xl font-bold text-white">
             ${results.totalAnnualSpend}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-green-900 bg-green-950/20 p-4">
-          <p className="text-sm text-green-400">
-            Potential Savings
-          </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="rounded-2xl border border-emerald-900 bg-gradient-to-br from-emerald-950/30 to-zinc-900 p-5"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-emerald-400">
+              Potential Savings
+            </p>
 
-          <p className="mt-2 text-3xl font-bold text-green-400">
+            <Sparkles className="h-5 w-5 text-emerald-400" />
+          </div>
+
+          <p className="mt-4 text-4xl font-bold text-emerald-400">
             ${results.potentialSavings}
           </p>
-        </div>
+        </motion.div>
       </div>
     </Card>
   </div>
-)}
-
-</section>
-);
+      )}
+    </section>
+  );
 }
