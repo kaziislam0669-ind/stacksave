@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+import { generateAudit } from "@/lib/audit-engine";
+import { AuditResult } from "@/types/audit";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,6 +26,8 @@ export default function AuditForm() {
       useCase: "",
     },
   ]);
+
+  const [results, setResults] = useState<AuditResult | null>(null);
 
   const updateTool = (
     index: number,
@@ -51,8 +56,29 @@ export default function AuditForm() {
     ]);
   };
 
+  const handleGenerateAudit = () => {
+  try {
+    const formattedTools = tools.map((tool) => ({
+      tool: tool.tool,
+      monthlySpend: Number(tool.monthlySpend),
+      seats: Number(tool.seats),
+      useCase: tool.useCase,
+    }));
+
+    console.log(formattedTools);
+
+    const auditResults = generateAudit(formattedTools);
+
+    console.log(auditResults);
+
+    setResults(auditResults);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
-    <section className="px-6 pb-24">
+    <section className="relative z-50 px-6 pb-24">
       <div className="mx-auto max-w-4xl">
         <Card className="border-zinc-800 bg-zinc-900 p-8">
           <div className="mb-8">
@@ -87,9 +113,7 @@ export default function AuditForm() {
                     }
                     className="w-full rounded-md border border-zinc-700 bg-black px-3 py-2 text-white"
                   >
-                    <option value="">
-                      Select Tool
-                    </option>
+                    <option value="">Select Tool</option>
 
                     {toolOptions.map((item) => (
                       <option
@@ -168,12 +192,58 @@ export default function AuditForm() {
               Add Another Tool
             </Button>
 
-            <Button>
-              Generate Audit
-            </Button>
+            <button
+             onClick={handleGenerateAudit}
+             className="cursor-pointer rounded-md bg-white px-4 py-2 text-black"
+          >
+             Generate Audit
+            </button>
           </div>
         </Card>
+</div>
+
+{results && (
+  <div className="mt-10 space-y-6">
+    <Card className="border-zinc-800 bg-zinc-900 p-6">
+      <h3 className="text-2xl font-bold text-white">
+        Audit Results
+      </h3>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-xl border border-zinc-800 bg-black p-4">
+          <p className="text-sm text-zinc-400">
+            Monthly Spend
+          </p>
+
+          <p className="mt-2 text-3xl font-bold text-white">
+            ${results.totalMonthlySpend}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-zinc-800 bg-black p-4">
+          <p className="text-sm text-zinc-400">
+            Annual Spend
+          </p>
+
+          <p className="mt-2 text-3xl font-bold text-white">
+            ${results.totalAnnualSpend}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-green-900 bg-green-950/20 p-4">
+          <p className="text-sm text-green-400">
+            Potential Savings
+          </p>
+
+          <p className="mt-2 text-3xl font-bold text-green-400">
+            ${results.potentialSavings}
+          </p>
+        </div>
       </div>
-    </section>
-  );
+    </Card>
+  </div>
+)}
+
+</section>
+);
 }
