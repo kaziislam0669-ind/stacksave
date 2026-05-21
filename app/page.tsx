@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import AuditForm from "@/components/audit-form";
 
 export default function Home() {
   return (
@@ -65,6 +66,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <AuditForm />
     </main>
   );
 }
