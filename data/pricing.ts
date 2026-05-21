@@ -1,31 +1,31 @@
 export const pricingData = {
-  chatgpt: {
-    plus: 20,
-    team: 30,
-    enterprise: 60,
+  ChatGPT: {
+    monthlyPrice: 20,
+    category: "general",
+    alternatives: ["Claude", "Gemini"],
   },
 
-  cursor: {
-    hobby: 0,
-    pro: 20,
-    business: 40,
+  Claude: {
+    monthlyPrice: 20,
+    category: "research",
+    alternatives: ["ChatGPT", "Gemini"],
   },
 
-  claude: {
-    free: 0,
-    pro: 20,
-    max: 100,
-    team: 30,
+  Cursor: {
+    monthlyPrice: 20,
+    category: "coding",
+    alternatives: ["Copilot"],
   },
 
-  copilot: {
-    individual: 10,
-    business: 19,
-    enterprise: 39,
+  Copilot: {
+    monthlyPrice: 10,
+    category: "coding",
+    alternatives: ["Cursor"],
   },
 
-  gemini: {
-    pro: 20,
-    ultra: 125,
+  Gemini: {
+    monthlyPrice: 0,
+    category: "general",
+    alternatives: ["ChatGPT"],
   },
 };

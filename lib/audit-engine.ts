@@ -1,61 +1,50 @@
-import { AuditResult } from "@/types/audit";
+import { pricingData } from "@/data/pricing";
+import { AuditInput, AuditResult, AuditRecommendation } from "@/types/audit";
 
-interface ToolInput {
-  tool: string;
-  monthlySpend: string;
-  seats: string;
-  useCase: string;
-}
+export function generateAudit(tools: AuditInput[]): AuditResult {
+  let totalMonthlySpend = 0;
+  let potentialSavings = 0;
 
-export function generateAudit(
-  tools: ToolInput[]
-): AuditResult[] {
-  return tools.map((tool) => {
-    const spend = Number(tool.monthlySpend);
-    const seats = Number(tool.seats);
+  const recommendations: AuditRecommendation[] = [];
 
-    let recommendedSpend = spend;
-    let recommendation =
-      "Current setup looks reasonable.";
+  tools.forEach((tool) => {
+    totalMonthlySpend += tool.monthlySpend * tool.seats;
 
-    // SIMPLE AUDIT RULES
+    const pricing =
+      pricingData[tool.tool as keyof typeof pricingData];
 
-    if (tool.tool === "ChatGPT") {
-      if (seats <= 2 && spend > 60) {
-        recommendedSpend = 40;
+    if (!pricing) return;
 
-        recommendation =
-          "Small teams usually do not need ChatGPT Team plans.";
+    pricing.alternatives.forEach((alternativeName) => {
+      const alternative =
+        pricingData[alternativeName as keyof typeof pricingData];
+
+      if (!alternative) return;
+
+      const currentCost = tool.monthlySpend * tool.seats;
+      const alternativeCost =
+        alternative.monthlyPrice * tool.seats;
+
+      if (alternativeCost < currentCost) {
+        const savings = currentCost - alternativeCost;
+
+        potentialSavings += savings;
+
+        recommendations.push({
+          currentTool: tool.tool,
+          suggestedTool: alternativeName,
+          monthlySavings: savings,
+          annualSavings: savings * 12,
+          reason: `${alternativeName} offers similar functionality at lower cost.`,
+        });
       }
-    }
-
-    if (tool.tool === "Claude") {
-      if (spend > 100) {
-        recommendedSpend = spend * 0.7;
-
-        recommendation =
-          "Claude spend appears high relative to typical usage.";
-      }
-    }
-
-    if (tool.tool === "Cursor") {
-      if (seats <= 3 && spend > 40) {
-        recommendedSpend = 20;
-
-        recommendation =
-          "Cursor Pro may be enough for smaller teams.";
-      }
-    }
-
-    const savings =
-      spend - recommendedSpend;
-
-    return {
-      tool: tool.tool,
-      currentSpend: spend,
-      recommendedSpend,
-      savings,
-      recommendation,
-    };
+    });
   });
+
+  return {
+    totalMonthlySpend,
+    totalAnnualSpend: totalMonthlySpend * 12,
+    potentialSavings,
+    recommendations,
+  };
 }
