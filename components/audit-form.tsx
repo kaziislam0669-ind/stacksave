@@ -15,6 +15,7 @@ import {
   DollarSign,
   Sparkles,
   ArrowRight,
+  BadgeDollarSign,
 } from "lucide-react";
 
 const toolOptions = [
@@ -276,8 +277,76 @@ export default function AuditForm() {
         </motion.div>
       </div>
     </Card>
+
+    <Card className="border-zinc-800 bg-zinc-900 p-6">
+      <h3 className="text-2xl font-bold text-white">
+        Recommendations
+      </h3>
+
+      <div className="mt-6 space-y-5">
+        {results.recommendations.map(
+          (recommendation, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.3 + index * 0.2,
+              }}
+              className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-950 to-zinc-900 p-6"
+            >
+              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-zinc-800 p-2">
+                      <ArrowRight className="h-4 w-4 text-zinc-300" />
+                    </div>
+
+                    <div>
+                      <p className="text-lg font-semibold text-white">
+                        {recommendation.currentTool}
+                      </p>
+
+                      <p className="text-sm text-zinc-500">
+                        Replace with
+                      </p>
+                    </div>
+
+                    <div className="rounded-full bg-emerald-950/40 px-3 py-1 text-sm text-emerald-400">
+                      {recommendation.suggestedTool}
+                    </div>
+                  </div>
+
+                  <p className="mt-5 max-w-xl text-sm leading-6 text-zinc-400">
+                    {recommendation.reason}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3 rounded-2xl border border-emerald-900 bg-emerald-950/20 px-5 py-4">
+                  <BadgeDollarSign className="h-8 w-8 text-emerald-400" />
+
+                  <div>
+                    <p className="text-sm text-emerald-400">
+                      Estimated Savings
+                    </p>
+
+                    <p className="text-2xl font-bold text-white">
+                      ${recommendation.monthlySavings}/mo
+                    </p>
+
+                    <p className="text-xs text-zinc-500">
+                      ${recommendation.annualSavings}/year
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )
+        )}
+      </div>
+    </Card>
   </div>
-      )}
-    </section>
-  );
+)}
+</section>
+);
 }
